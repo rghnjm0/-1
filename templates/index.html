@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+
+{% block title %}ONYX Hotel - Роскошь и комфорт{% endblock %}
+
+{% block content %}
+<!-- Hero Section - компактный -->
+<section class="hero-section" style="padding: 3rem 0; margin-bottom: 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 mb-3" style="font-size: 0.7rem;">
+                    <i class="fas fa-crown me-1"></i>ПРЕМИУМ КЛАСС
+                </span>
+                <h1 class="fw-bold mb-3" style="font-size: clamp(2rem, 4vw, 3rem);">
+                    Искусство<br>
+                    <span class="text-gradient">гостеприимства</span>
+                </h1>
+                <p class="mb-4 mx-auto text-light" style="max-width: 500px; font-size: 0.95rem;">
+                    Погрузитесь в атмосферу безупречного сервиса и изысканного комфорта в самом сердце столицы
+                </p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <a href="{{ url_for('search_rooms') }}" class="btn btn-primary px-4 py-2" style="font-size: 0.9rem;">
+                        <i class="fas fa-calendar-check me-1"></i>Забронировать
+                    </a>
+                    <a href="#rooms" class="btn btn-outline-light px-4 py-2" style="font-size: 0.9rem;">
+                        <i class="fas fa-arrow-down me-1"></i>Смотреть номера
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Search - компактная форма -->
+<div class="container" style="margin-top: -30px;">
+    <div class="card bg-glass border-0 shadow">
+        <div class="card-body p-3 p-xl-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <div class="bg-primary bg-opacity-10 rounded p-2">
+                    <i class="fas fa-search fa-sm text-primary"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 fw-semibold text-white" style="font-size: 0.9rem;">Найти идеальный номер</h6>
+                    <p class="text-light small mb-0" style="font-size: 0.7rem;">Выберите даты и количество гостей</p>
+                </div>
+            </div>
+
+            <form action="{{ url_for('search_rooms') }}" method="GET">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <label class="form-label text-light" style="font-size: 0.7rem; text-transform: uppercase;">Дата заезда</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text border-end-0 bg-transparent">
+                                <i class="fas fa-calendar-alt text-light" style="font-size: 0.75rem;"></i>
+                            </span>
+                            <input type="date" name="check_in" class="form-control border-start-0 text-white"
+                                   style="font-size: 0.85rem; padding: 0.4rem 0.5rem;"
+                                   min="{{ today.strftime('%Y-%m-%d') }}"
+                                   value="{{ today.strftime('%Y-%m-%d') }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-light" style="font-size: 0.7rem; text-transform: uppercase;">Дата выезда</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text border-end-0 bg-transparent">
+                                <i class="fas fa-calendar-alt text-light" style="font-size: 0.75rem;"></i>
+                            </span>
+                            <input type="date" name="check_out" class="form-control border-start-0 text-white"
+                                   style="font-size: 0.85rem; padding: 0.4rem 0.5rem;"
+                                   min="{{ today.strftime('%Y-%m-%d') }}"
+                                   value="{{ (today + timedelta(days=1)).strftime('%Y-%m-%d') }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label text-light" style="font-size: 0.7rem; text-transform: uppercase;">Гости</label>
+                        <select name="guests" class="form-select text-white" style="font-size: 0.85rem; padding: 0.4rem 0.5rem;">
+                            <option value="1" class="bg-dark">1 гость</option>
+                            <option value="2" selected class="bg-dark">2 гостя</option>
+                            <option value="3" class="bg-dark">3 гостя</option>
+                            <option value="4" class="bg-dark">4 гостя</option>
+                            <option value="5" class="bg-dark">5 гостей</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label text-light" style="font-size: 0.7rem; text-transform: uppercase;">Категория</label>
+                        <select name="category" class="form-select text-white" style="font-size: 0.85rem; padding: 0.4rem 0.5rem;">
+                            <option value="" class="bg-dark">Все категории</option>
+                            {% for category in categories %}
+                            <option value="{{ category }}" class="bg-dark">{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" style="font-size: 0.7rem;">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-100" style="font-size: 0.85rem; padding: 0.4rem;">
+                            <i class="fas fa-search me-1"></i>Найти
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Rooms Section - компактные карточки -->
+<section id="rooms" class="container mt-4 pt-3">
+    <div class="d-flex justify-content-between align-items-end mb-3">
+        <div>
+            <span class="text-primary text-uppercase small fw-semibold mb-1 d-block" style="font-size: 0.7rem;">
+                <i class="fas fa-key me-1"></i> Номера и люксы
+            </span>
+            <h2 class="mb-0 fw-bold text-white" style="font-size: 1.5rem;">Выберите свой номер</h2>
+        </div>
+        <a href="{{ url_for('search_rooms') }}" class="btn btn-outline-primary btn-sm" style="font-size: 0.8rem;">
+            Все номера <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+
+    <div class="row g-3">
+        {% for room in rooms[:3] %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100">
+                <div class="position-relative overflow-hidden" style="height: 180px;">
+                    <span class="status-badge badge bg-{{ 'success' if room['Статус'] == 'Свободен' else 'warning' if room['Статус'] == 'Будет занят' else 'danger' }} bg-opacity-10" style="top: 8px; right: 8px; font-size: 0.6rem; padding: 2px 8px;">
+                        <i class="fas fa-circle me-1" style="font-size: 0.3rem;"></i>
+                        {{ room['Статус'] }}
+                    </span>
+
+                    <img src="{{ get_room_image(room['Номер_Комнаты']) }}"
+                         class="card-img-top"
+                         alt="Номер {{ room['Номер_Комнаты'] }}"
+                         style="height: 180px; width: 100%; object-fit: cover;"
+                         onerror="this.src='{{ url_for('static', filename='images/rooms/default.jpg') }}'">
+
+                    <div class="position-absolute bottom-0 start-0 w-100 p-2"
+                         style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                        <span class="badge bg-dark bg-opacity-90 text-white" style="font-size: 0.7rem;">
+                            <i class="fas fa-tag me-1 text-primary"></i>от {{ "%.0f"|format(room['Цена_за_сутки']) }} ₽/ночь
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="fw-bold mb-0 text-white" style="font-size: 1rem;">Номер {{ room['Номер_Комнаты'] }}</h6>
+                            <p class="text-primary small mb-0" style="font-size: 0.7rem;">{{ room['Категория'] }}</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-1">
+                            <i class="fas fa-star text-warning" style="font-size: 0.6rem;"></i>
+                            <i class="fas fa-star text-warning" style="font-size: 0.6rem;"></i>
+                            <i class="fas fa-star text-warning" style="font-size: 0.6rem;"></i>
+                            <i class="fas fa-star text-warning" style="font-size: 0.6rem;"></i>
+                            <i class="fas fa-star text-warning" style="font-size: 0.6rem;"></i>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        <span class="text-light small" style="font-size: 0.7rem;">
+                            <i class="fas fa-user me-1 text-primary"></i> до {{ room['Вместимость'] }} чел.
+                        </span>
+                        <span class="text-light small" style="font-size: 0.7rem;">
+                            <i class="fas fa-building me-1 text-primary"></i> {{ room['Этаж'] }} этаж
+                        </span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('room_detail', room_id=room['ID_Номера']) }}"
+                           class="btn btn-outline-primary btn-sm flex-grow-1" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                            <i class="fas fa-eye me-1"></i> Подробнее
+                        </a>
+                        {% if room['Статус'] == 'Свободен' %}
+                            {% if session.client_id %}
+                            <a href="{{ url_for('create_booking', room_id=room['ID_Номера']) }}"
+                               class="btn btn-primary btn-sm flex-grow-1" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                                <i class="fas fa-calendar-plus me-1"></i> Бронь
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('login') }}"
+                               class="btn btn-primary btn-sm flex-grow-1" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                                <i class="fas fa-sign-in-alt me-1"></i> Войти
+                            </a>
+                            {% endif %}
+                        {% else %}
+                            <button class="btn btn-secondary btn-sm flex-grow-1" disabled style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                                <i class="fas fa-lock me-1"></i> Занят
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Features Section - компактные карточки услуг -->
+<section class="container mt-4 pt-2">
+    <div class="text-center mb-3">
+        <span class="text-primary text-uppercase small fw-semibold mb-1 d-block" style="font-size: 0.7rem;">
+            <i class="fas fa-star me-1"></i> Почему выбирают нас
+        </span>
+        <h2 class="fw-bold text-white" style="font-size: 1.5rem;">Исключительный сервис</h2>
+        <p class="text-light mx-auto" style="max-width: 500px; font-size: 0.85rem;">
+            Мы создали пространство, где каждая деталь продумана для вашего комфорта
+        </p>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-transparent border-1 h-100 text-center p-2">
+                <div class="card-body p-2">
+                    <div class="bg-success bg-opacity-10 rounded p-2 d-inline-flex mb-2">
+                        <i class="fas fa-wifi fa-lg text-success"></i>
+                    </div>
+                    <h6 class="fw-bold mb-1 text-white" style="font-size: 0.85rem;">Скоростной Wi-Fi</h6>
+                    <p class="text-light small mb-0" style="font-size: 0.7rem;">До 500 Мбит/с</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-transparent border-1 h-100 text-center p-2">
+                <div class="card-body p-2">
+                    <div class="bg-primary bg-opacity-10 rounded p-2 d-inline-flex mb-2">
+                        <i class="fas fa-parking fa-lg text-primary"></i>
+                    </div>
+                    <h6 class="fw-bold mb-1 text-white" style="font-size: 0.85rem;">Парковка</h6>
+                    <p class="text-light small mb-0" style="font-size: 0.7rem;">Охраняемая 24/7</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-transparent border-1 h-100 text-center p-2">
+                <div class="card-body p-2">
+                    <div class="bg-warning bg-opacity-10 rounded p-2 d-inline-flex mb-2">
+                        <i class="fas fa-utensils fa-lg text-warning"></i>
+                    </div>
+                    <h6 class="fw-bold mb-1 text-white" style="font-size: 0.85rem;">Ресторан</h6>
+                    <p class="text-light small mb-0" style="font-size: 0.7rem;">Авторская кухня</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-transparent border-1 h-100 text-center p-2">
+                <div class="card-body p-2">
+                    <div class="bg-info bg-opacity-10 rounded p-2 d-inline-flex mb-2">
+                        <i class="fas fa-spa fa-lg text-info"></i>
+                    </div>
+                    <h6 class="fw-bold mb-1 text-white" style="font-size: 0.85rem;">Спа-центр</h6>
+                    <p class="text-light small mb-0" style="font-size: 0.7rem;">Бассейн, сауна</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Amenities Section - компактный -->
+<section class="container mt-3 pt-2">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card bg-glass h-100 p-2">
+                <div class="card-body p-2 d-flex align-items-center gap-2">
+                    <div class="bg-primary bg-opacity-10 rounded p-2">
+                        <i class="fas fa-clock fa-sm text-primary"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-white" style="font-size: 0.85rem;">Круглосуточно</h6>
+                        <p class="text-light small mb-0" style="font-size: 0.7rem;">Стойка регистрации 24/7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-glass h-100 p-2">
+                <div class="card-body p-2 d-flex align-items-center gap-2">
+                    <div class="bg-success bg-opacity-10 rounded p-2">
+                        <i class="fas fa-shield-alt fa-sm text-success"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-white" style="font-size: 0.85rem;">Безопасность</h6>
+                        <p class="text-light small mb-0" style="font-size: 0.7rem;">Видеонаблюдение 24/7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-glass h-100 p-2">
+                <div class="card-body p-2 d-flex align-items-center gap-2">
+                    <div class="bg-info bg-opacity-10 rounded p-2">
+                        <i class="fas fa-concierge-bell fa-sm text-info"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-white" style="font-size: 0.85rem;">Консьерж-сервис</h6>
+                        <p class="text-light small mb-0" style="font-size: 0.7rem;">Персональный консьерж</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section - компактный -->
+<section class="container mt-4 pt-2 mb-4">
+    <div class="card border-0 overflow-hidden position-relative p-3" style="background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);">
+        <div class="card-body p-3 text-center position-relative">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 mb-2" style="font-size: 0.7rem;">
+                        <i class="fas fa-gift me-1"></i> СПЕЦПРЕДЛОЖЕНИЕ
+                    </span>
+                    <h4 class="fw-bold mb-2 text-white" style="font-size: 1.25rem;">Готовы к незабываемому отдыху?</h4>
+                    <p class="text-light mb-3" style="font-size: 0.85rem;">
+                        Забронируйте номер сегодня и получите бутылку шампанского и фрукты в подарок
+                    </p>
+                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                        <a href="{{ url_for('search_rooms') }}" class="btn btn-primary px-4 py-1" style="font-size: 0.85rem;">
+                            <i class="fas fa-calendar-check me-1"></i>Забронировать
+                        </a>
+                        <a href="{{ url_for('contact') }}" class="btn btn-outline-light px-4 py-1" style="font-size: 0.85rem;">
+                            <i class="fas fa-phone-alt me-1"></i>Связаться
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Reviews Section - компактный -->
+<section class="container mt-2 pt-2 mb-4">
+    <div class="text-center mb-3">
+        <span class="text-primary text-uppercase small fw-semibold mb-1 d-block" style="font-size: 0.7rem;">
+            <i class="fas fa-comment me-1"></i> Отзывы гостей
+        </span>
+        <h2 class="fw-bold text-white" style="font-size: 1.5rem;">Что говорят о нас</h2>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card h-100 p-2">
+                <div class="card-body p-2">
+                    <div class="mb-2">
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                    </div>
+                    <p class="text-light mb-2" style="font-size: 0.8rem;">"Потрясающий отель! Безупречный сервис, чистые номера."</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="avatar" style="width: 32px; height: 32px; font-size: 0.9rem;">А</div>
+                        <div>
+                            <h6 class="text-white mb-0" style="font-size: 0.8rem;">Анна М.</h6>
+                            <p class="text-muted small mb-0" style="font-size: 0.65rem;">Москва</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-2">
+                <div class="card-body p-2">
+                    <div class="mb-2">
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                    </div>
+                    <p class="text-light mb-2" style="font-size: 0.8rem;">"Отличный спа-центр и ресторан. Персонал очень внимательный."</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="avatar" style="width: 32px; height: 32px; font-size: 0.9rem;">С</div>
+                        <div>
+                            <h6 class="text-white mb-0" style="font-size: 0.8rem;">Сергей К.</h6>
+                            <p class="text-muted small mb-0" style="font-size: 0.65rem;">СПб</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-2">
+                <div class="card-body p-2">
+                    <div class="mb-2">
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                        <i class="fas fa-star text-warning" style="font-size: 0.7rem;"></i>
+                    </div>
+                    <p class="text-light mb-2" style="font-size: 0.8rem;">"Лучший отель в Москве! Номера просторные, вид из окна потрясающий."</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="avatar" style="width: 32px; height: 32px; font-size: 0.9rem;">Е</div>
+                        <div>
+                            <h6 class="text-white mb-0" style="font-size: 0.8rem;">Елена В.</h6>
+                            <p class="text-muted small mb-0" style="font-size: 0.65rem;">Казань</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.min-vh-75 {
+    min-height: 50vh;
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.avatar {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    border-radius: 50%;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Валидация формы поиска
+    const searchForm = document.querySelector('form[action*="search_rooms"]');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            const checkIn = this.querySelector('input[name="check_in"]');
+            const checkOut = this.querySelector('input[name="check_out"]');
+
+            if (checkIn && checkOut && checkIn.value && checkOut.value) {
+                const checkInDate = new Date(checkIn.value);
+                const checkOutDate = new Date(checkOut.value);
+
+                if (checkOutDate <= checkInDate) {
+                    e.preventDefault();
+                    alert('Дата выезда должна быть позже даты заезда');
+                }
+            }
+        });
+    }
+
+    // Установка минимальной даты выезда
+    const checkInInput = document.querySelector('input[name="check_in"]');
+    const checkOutInput = document.querySelector('input[name="check_out"]');
+
+    if (checkInInput && checkOutInput) {
+        checkInInput.addEventListener('change', function() {
+            checkOutInput.min = this.value;
+            if (checkOutInput.value && checkOutInput.value <= this.value) {
+                const nextDay = new Date(this.value);
+                nextDay.setDate(nextDay.getDate() + 1);
+                checkOutInput.value = nextDay.toISOString().split('T')[0];
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
