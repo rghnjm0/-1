@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Вход - ONYX Hotel{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-sign-in-alt fa-2x text-primary mb-3"></i>
+                        <h4 class="text-white">Вход в систему</h4>
+                        <p class="text-muted small">Введите ваш номер телефона и пароль</p>
+                    </div>
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Номер телефона</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent">
+                                    <i class="fas fa-phone text-primary"></i>
+                                </span>
+                                <input type="tel" name="login" class="form-control"
+                                       placeholder="+7 (999) 888-88-88" required>
+                            </div>
+                            <div class="form-text">Введите номер, указанный при регистрации</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Пароль</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent">
+                                    <i class="fas fa-lock text-primary"></i>
+                                </span>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-sign-in-alt me-2"></i>Войти
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-2">Нет аккаунта? <a href="{{ url_for('register') }}" class="text-primary">Зарегистрируйтесь</a></p>
+                        <a href="{{ url_for('index') }}" class="text-muted small">← Вернуться на главную</a>
+                    </div>
+
+                    <div class="alert alert-info mt-4 mb-0 small">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Тестовые данные:</strong><br>
+                        👑 Администратор: тел. <strong>+7(999)888-88-88</strong>, пароль: <strong>admin123</strong><br>
+                        👤 Клиент: тел. <strong>+7(911)111-11-11</strong>, пароль: <strong>pass123</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

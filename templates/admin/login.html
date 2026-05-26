@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Вход в админ-панель{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                        <h4 class="text-white">Вход в админ-панель</h4>
+                        <p class="text-muted small">Управление отелем ONYX</p>
+                    </div>
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Логин</label>
+                            <input type="text" name="login" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Пароль</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-sign-in-alt me-2"></i>Войти
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+                    <div class="text-center">
+                        <small class="text-muted">Тестовый доступ: admin / admin123</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

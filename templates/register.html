@@ -1,0 +1,90 @@
+<!-- templates/register.html -->
+{% extends "base.html" %}
+
+{% block title %}Регистрация - Гостиница "Комфорт"{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Регистрация нового клиента</h3>
+
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">Фамилия *</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">Имя *</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="middle_name" class="form-label">Отчество</label>
+                            <input type="text" class="form-control" id="middle_name" name="middle_name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Телефон *</label>
+                            <input type="tel" class="form-control" id="phone" name="phone"
+                                   placeholder="+7 (XXX) XXX-XX-XX" required>
+                            <div class="form-text">Будет использоваться как логин для входа</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="birth_date" class="form-label">Дата рождения</label>
+                                <input type="date" class="form-control" id="birth_date" name="birth_date">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="address" class="form-label">Адрес</label>
+                                <input type="text" class="form-control" id="address" name="address">
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Пароль *</label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       minlength="6" required>
+                                <div class="form-text">Минимум 6 символов</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="confirm_password" class="form-label">Подтверждение пароля *</label>
+                                <input type="password" class="form-control" id="confirm_password"
+                                       name="confirm_password" minlength="6" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agree" required>
+                            <label class="form-check-label" for="agree">
+                                Я согласен на обработку персональных данных
+                            </label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus"></i> Зарегистрироваться
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p>Уже есть аккаунт? <a href="{{ url_for('login') }}">Войдите</a></p>
+                        <p><a href="{{ url_for('index') }}">← Вернуться на главную</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
